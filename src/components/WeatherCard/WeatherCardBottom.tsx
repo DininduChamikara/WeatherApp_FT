@@ -28,8 +28,8 @@ const WeatherCardBottom: React.FC<Props> = ({ weatherBottomRecord }) => {
   // console.log(weatherBottomRecord);
   return (
     <div className="bg-[#383b47] rounded-b-xl p-5">
-      <div className="grid grid-cols-3 divide-x">
-        <div className="flex justify-center">
+      <div className="grid md:grid-cols-3 md:divide-x">
+        <div className="flex sm:my-1 md:my-0 justify-center">
           <div className="flex flex-col justify-center">
             <div className="flex gap-1">
               <p className="text-sm font-bold">Pressure:</p>
