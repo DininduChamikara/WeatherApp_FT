@@ -25,7 +25,6 @@ function formatTimestamp(timestamp: number): string {
 }
 
 const WeatherCardBottom: React.FC<Props> = ({ weatherBottomRecord }) => {
-  // console.log(weatherBottomRecord);
   return (
     <div className="bg-[#383b47] rounded-b-xl p-5">
       {/* medium and large screen */}

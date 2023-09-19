@@ -45,11 +45,13 @@ const WeatherCardIndividualTop: React.FC<Props> = ({ weatherTopRecord }) => {
         <div className="grid grid-cols-2 divide-x">
           <div className="flex-col mx-5">
             <div className="flex justify-center">
-              <img
-                className="w-[50px] h-[50px]"
-                src={`https://openweathermap.org/img/wn/${weatherTopRecord.icon}@2x.png`}
-                alt="icon"
-              />
+              {weatherTopRecord && weatherTopRecord.icon && (
+                <img
+                  className="w-[50px] h-[50px]"
+                  src={`https://openweathermap.org/img/wn/${weatherTopRecord.icon}@2x.png`}
+                  alt="icon"
+                />
+              )}
             </div>
             <div className="flex justify-center">
               <p className="text-base font-bold">

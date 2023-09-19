@@ -1,17 +1,50 @@
 import { useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import apiManager from "./api/apiManager";
+import Footer from "./components/Footer";
 import Header from "./components/Header";
-import WeatherCard from "./components/WeatherCard/WeatherCard";
 import cityData from "./data/cities.json";
 import backgroundImage from "./images/header_bg.png";
-import WeatherCardIndividual from "./components/WeatherCard/WeatherCardIndividual";
-import Footer from "./components/Footer";
+import Home from "./pages/Home";
+import IndividualView from "./pages/IndividualView";
 
 function App() {
   const [weatherRecords, setWeatherRecords] = useState<any[]>([]);
   const [individualView, setIndividualView] = useState<boolean>(false);
-  const [individualRecord, setIndividualRecord] = useState<any>({});
   const [individualRecordIndex, setIndividualRecordIndex] = useState<number>(0);
+
+  let apiCallMade = false;
+
+  const callAPI = () => {
+    if (!apiCallMade) {
+      const cityCodesArr: any[] = [];
+      cityData.List.forEach((city: any) => {
+        cityCodesArr.push(city.CityCode);
+      });
+
+      const apiCall = apiManager.apiGET_WeatherByCityIds(
+        cityCodesArr,
+        "metric"
+      );
+      apiCall.then((response) => {
+        if (response) {
+          setWeatherRecords(response.list);
+
+          // Cache the data in localStorage with a timestamp
+          localStorage.setItem(
+            "cachedWeatherData",
+            JSON.stringify({
+              response,
+              individualView,
+              individualRecordIndex,
+              timestamp: Date.now(),
+            })
+          );
+        }
+      });
+      apiCallMade = true;
+    }
+  };
 
   useEffect(() => {
     // Check if cached data exists and is not expired
@@ -27,44 +60,22 @@ function App() {
       const cachedWeatherDataTimestamp = parsedCachedWeatherData.timestamp;
       const cachedWeatherDataResponse = parsedCachedWeatherData.response;
 
+      const cachedIndividualRecordIndex =
+        parsedCachedWeatherData.individualRecordIndex;
+      const cachedIndividualView = parsedCachedWeatherData.individualView;
+
       if (Date.now() - cachedWeatherDataTimestamp < 5 * 60 * 1000) {
         setWeatherRecords(cachedWeatherDataResponse.list);
+        setIndividualView(cachedIndividualView);
+        setIndividualRecordIndex(cachedIndividualRecordIndex);
         return;
       } else {
         // old cached data
-        const apiCall = apiManager.apiGET_WeatherByCityIds(
-          cityCodesArr,
-          "metric"
-        );
-
-        apiCall.then((response) => {
-          if (response) {
-            setWeatherRecords(response.list);
-            // Cache the data in localStorage with a timestamp
-            localStorage.setItem(
-              "cachedWeatherData",
-              JSON.stringify({ response, timestamp: Date.now() })
-            );
-          }
-        });
+        callAPI();
       }
     } else {
       // No cached data
-      const apiCall = apiManager.apiGET_WeatherByCityIds(
-        cityCodesArr,
-        "metric"
-      );
-
-      apiCall.then((response) => {
-        if (response) {
-          setWeatherRecords(response.list);
-          // Cache the data in localStorage with a timestamp
-          localStorage.setItem(
-            "cachedWeatherData",
-            JSON.stringify({ response, timestamp: Date.now() })
-          );
-        }
-      });
+      callAPI();
     }
   }, []);
 
@@ -75,46 +86,39 @@ function App() {
   }
 
   return (
-    <>
-      <div className="bg-[#1f2128] h-full pb-20">
-        <div
-          className="relative bg-no-repeat w-full p-5 md:p-20"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
-        >
-          <Header />
-          {individualView ? (
-            <div>
-              <div className="w-full flex justify-center">
-                <WeatherCardIndividual
-                  record={individualRecord}
-                  index={individualRecordIndex}
-                  setIndividualRecord={setIndividualRecord}
+    <div className="bg-[#1f2128] h-full pb-20">
+      <div
+        className="relative bg-no-repeat w-full p-5 md:p-20"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      >
+        <Header />
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Home
+                  weatherRecords={weatherRecords}
+                  popItemFromArray={popItemFromArray}
                   setIndividualView={setIndividualView}
                   setIndividualRecordIndex={setIndividualRecordIndex}
                 />
-              </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-8 px-0 lg:px-40">
-              {weatherRecords.map((record: any, index: number) => {
-                return (
-                  <WeatherCard
-                    key={record.id}
-                    record={record}
-                    index={index}
-                    popItemFromArray={popItemFromArray}
-                    setIndividualRecord={setIndividualRecord}
-                    setIndividualView={setIndividualView}
-                    setIndividualRecordIndex={setIndividualRecordIndex}
-                  />
-                );
-              })}
-            </div>
-          )}
-        </div>
-        <Footer />
+              }
+            />
+            <Route
+              path="/individual_view"
+              element={
+                <IndividualView
+                  individualRecordIndex={individualRecordIndex}
+                  setIndividualView={setIndividualView}
+                />
+              }
+            />
+          </Routes>
+        </BrowserRouter>
       </div>
-    </>
+      <Footer />
+    </div>
   );
 }
 

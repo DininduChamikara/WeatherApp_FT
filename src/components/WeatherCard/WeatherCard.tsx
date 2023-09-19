@@ -1,18 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import backgroundImage from "../../images/cloud_bg.png";
 import WeatherCardBottom from "./WeatherCardBottom";
 import WeatherCardTop from "./WeatherCardTop";
-
-const colors = [
-  "bg-orange-500",
-  "bg-sky-500",
-  "bg-green-500",
-  "bg-yellow-500",
-  "bg-red-500",
-  "bg-purple-500",
-  "bg-pink-500",
-  "bg-blue-500",
-];
+import { colors } from "../../constants";
 
 type Props = {
   record: {
@@ -54,7 +45,6 @@ type Props = {
   };
   index: number;
   popItemFromArray: (index: number) => void;
-  setIndividualRecord: (record: any) => void;
   setIndividualView: (view: boolean) => void;
   setIndividualRecordIndex: (index: number) => void;
 };
@@ -63,10 +53,11 @@ const WeatherCard: React.FC<Props> = ({
   record,
   index,
   popItemFromArray,
-  setIndividualRecord,
   setIndividualView,
   setIndividualRecordIndex,
 }) => {
+  const navigate = useNavigate();
+
   const weatherTopRecord = {
     cityName: record.name,
     country: record.sys.country,
@@ -91,7 +82,7 @@ const WeatherCard: React.FC<Props> = ({
   return (
     <div
       className={`relative bg-no-repeat w-full text-white ${colors[index]} rounded-xl`}
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: "cover" }}
     >
       <div className="rounded-t-xl">
         <div className="flex justify-end p-4">
@@ -115,9 +106,9 @@ const WeatherCard: React.FC<Props> = ({
         <div
           className="cursor-pointer"
           onClick={() => {
-            setIndividualRecord(record);
             setIndividualView(true);
             setIndividualRecordIndex(index);
+            navigate(`/individual_view?citycode=${record.id}`);
           }}
         >
           <WeatherCardTop weatherTopRecord={weatherTopRecord} />
