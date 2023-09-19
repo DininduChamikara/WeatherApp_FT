@@ -7,11 +7,14 @@ import cityData from "./data/cities.json";
 import backgroundImage from "./images/header_bg.png";
 import Home from "./pages/Home";
 import IndividualView from "./pages/IndividualView";
+import SpinerLoader from "./components/SpinerLoader";
 
 function App() {
   const [weatherRecords, setWeatherRecords] = useState<any[]>([]);
   const [individualView, setIndividualView] = useState<boolean>(false);
   const [individualRecordIndex, setIndividualRecordIndex] = useState<number>(0);
+
+  const [loaded, setLoaded] = useState<boolean>(false);
 
   let apiCallMade = false;
 
@@ -40,6 +43,7 @@ function App() {
               timestamp: Date.now(),
             })
           );
+          setLoaded(true);
         }
       });
       apiCallMade = true;
@@ -68,6 +72,7 @@ function App() {
         setWeatherRecords(cachedWeatherDataResponse.list);
         setIndividualView(cachedIndividualView);
         setIndividualRecordIndex(cachedIndividualRecordIndex);
+        setLoaded(true);
         return;
       } else {
         // old cached data
@@ -87,39 +92,42 @@ function App() {
 
   return (
     <div className="bg-[#1f2128] w-full pb-20">
-     {/* <div> */}
       <div
         className="bg-fixed bg-no-repeat w-full p-5 md:p-20"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         <Header />
-        <BrowserRouter>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Home
-                  weatherRecords={weatherRecords}
-                  popItemFromArray={popItemFromArray}
-                  setIndividualView={setIndividualView}
-                  setIndividualRecordIndex={setIndividualRecordIndex}
-                />
-              }
-            />
-            <Route
-              path="/individual_view"
-              element={
-                <IndividualView
-                  individualRecordIndex={individualRecordIndex}
-                  setIndividualView={setIndividualView}
-                />
-              }
-            />
-          </Routes>
-        </BrowserRouter>
+        {loaded ? (
+          <BrowserRouter>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Home
+                    weatherRecords={weatherRecords}
+                    popItemFromArray={popItemFromArray}
+                    setIndividualView={setIndividualView}
+                    setIndividualRecordIndex={setIndividualRecordIndex}
+                  />
+                }
+              />
+              <Route
+                path="/individual_view"
+                element={
+                  <IndividualView
+                    individualRecordIndex={individualRecordIndex}
+                    setIndividualView={setIndividualView}
+                  />
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        ) : (
+          <SpinerLoader />
+        )}
       </div>
-        <Footer />
-      <div className="fixed bottom-0 left-0 right-0 z-[-1] h-screen bg-[#1f2128]"/>
+      <Footer />
+      <div className="fixed bottom-0 left-0 right-0 z-[-1] h-screen bg-[#1f2128]" />
     </div>
   );
 }

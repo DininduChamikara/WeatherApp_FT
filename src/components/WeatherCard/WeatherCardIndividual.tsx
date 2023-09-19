@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import WeatherCardBottom from "./WeatherCardBottom";
 import WeatherCardIndividualTop from "./WeatherCardIndividualTop";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -15,6 +15,8 @@ const WeatherCardIndividual: React.FC<Props> = ({
   setIndividualView,
 }) => {
   const navigate = useNavigate();
+
+  const [loaded, setLoaded] = useState<boolean>(false);
 
   const [queryParameters] = useSearchParams();
   const citycode = queryParameters.get("citycode")?.toString() || "";
@@ -77,6 +79,7 @@ const WeatherCardIndividual: React.FC<Props> = ({
               lastRequestedCityCode: citycode,
             })
           );
+          setLoaded(true);
         }
       });
       apiCallMade = true;
@@ -125,6 +128,7 @@ const WeatherCardIndividual: React.FC<Props> = ({
             sunrise: cachedIndividualCardDataResponse.list[0].sys.sunrise,
             sunset: cachedIndividualCardDataResponse.list[0].sys.sunset,
           });
+          setLoaded(true);
         } else {
           callAPI();
         }
@@ -139,33 +143,35 @@ const WeatherCardIndividual: React.FC<Props> = ({
     <div
       className={`relative w-[600px] text-white ${colors[index]} rounded-xl`}
     >
-      <div className="rounded-t-xl w-[600]">
-        <div className="flex justify-start p-4">
-          <button
-            onClick={() => {
-              setIndividualView(false);
-              navigate("/");
-            }}
-          >
-            <svg
-              className="w-[18px] h-[18px] text-white"
-              aria-hidden="true"
-              fill="none"
-              viewBox="0 0 20 20"
+      {loaded && (
+        <div className="rounded-t-xl w-[600]">
+          <div className="flex justify-start p-4">
+            <button
+              onClick={() => {
+                setIndividualView(false);
+                navigate("/");
+              }}
             >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
-            </svg>
-          </button>
+              <svg
+                className="w-[18px] h-[18px] text-white"
+                aria-hidden="true"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+            </button>
+          </div>
+          <WeatherCardIndividualTop weatherTopRecord={weatherTopRecord} />
+          <WeatherCardBottom weatherBottomRecord={weatherBottomRecord} />
         </div>
-        <WeatherCardIndividualTop weatherTopRecord={weatherTopRecord} />
-        <WeatherCardBottom weatherBottomRecord={weatherBottomRecord} />
-      </div>
+      )}
     </div>
   );
 };
