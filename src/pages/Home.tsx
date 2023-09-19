@@ -15,7 +15,6 @@ const Home: React.FC<Props> = ({
   setIndividualRecordIndex,
 }) => {
   return (
-    // <div className="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-8 px-0 lg:px-40">
     <div className="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-8 px-0">
       {weatherRecords.map((record: any, index: number) => {
         return (
