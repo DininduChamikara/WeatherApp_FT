@@ -86,9 +86,10 @@ function App() {
   }
 
   return (
-    <div className="bg-[#1f2128] h-full pb-20">
+    <div className="bg-[#1f2128] w-full pb-20">
+     {/* <div> */}
       <div
-        className="relative bg-no-repeat w-full p-5 md:p-20"
+        className="bg-fixed bg-no-repeat w-full p-5 md:p-20"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         <Header />
@@ -117,7 +118,8 @@ function App() {
           </Routes>
         </BrowserRouter>
       </div>
-      <Footer />
+        <Footer />
+      <div className="fixed bottom-0 left-0 right-0 z-[-1] h-screen bg-[#1f2128]"/>
     </div>
   );
 }
