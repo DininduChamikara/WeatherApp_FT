@@ -3,80 +3,35 @@ import { useNavigate } from "react-router-dom";
 import backgroundImage from "../../images/cloud_bg.png";
 import WeatherCardBottom from "./WeatherCardBottom";
 import WeatherCardTop from "./WeatherCardTop";
-import { colors } from "../../constants";
+import { colors, routes } from "../../constants";
+import { WeatherRecordType } from "../../propTypes";
 
-type Props = {
-  record: {
-    sys: {
-      country: string;
-      timezone: Int32Array;
-      sunrise: number;
-      sunset: number;
-    };
-    weather: [
-      {
-        id: number;
-        main: string;
-        description: string;
-        icon: string;
-      }
-    ];
-    main: {
-      temp: number;
-      feels_like: number;
-      temp_min: number;
-      temp_max: number;
-      pressure: number;
-      sea_level: number;
-      grnd_level: number;
-      humidity: number;
-    };
-    visibility: number;
-    wind: {
-      speed: number;
-      deg: number;
-    };
-    clouds: {
-      all: number;
-    };
-    dt: number;
-    id: Int32Array;
-    name: string;
-  };
-  index: number;
-  popItemFromArray: (index: number) => void;
-  setIndividualView: (view: boolean) => void;
-  setIndividualRecordIndex: (index: number) => void;
-};
-
-const WeatherCard: React.FC<Props> = ({
+const WeatherCard: React.FC<WeatherRecordType> = ({
   record,
   index,
   popItemFromArray,
-  setIndividualView,
-  setIndividualRecordIndex,
 }) => {
   const navigate = useNavigate();
 
   const weatherTopRecord = {
-    cityName: record.name,
-    country: record.sys.country,
-    dt: record.dt,
-    icon: record.weather[0].icon,
-    description: record.weather[0].description,
-    temp: record.main.temp,
-    temp_min: record.main.temp_min,
-    temp_max: record.main.temp_max,
+    cityName: record?.name,
+    country: record?.sys.country,
+    dt: record?.dt,
+    icon: record?.weather[0].icon,
+    description: record?.weather[0].description,
+    temp: record?.main.temp,
+    temp_min: record?.main.temp_min,
+    temp_max: record?.main.temp_max,
   };
 
   const weatherBottomRecord = {
-    presure: record.main.pressure,
-    humidity: record.main.humidity,
-    visibility: record.visibility,
-    wind: record.wind.speed,
-    degree: record.wind.deg,
-    sunrise: record.sys.sunrise,
-    sunset: record.sys.sunset,
+    presure: record?.main.pressure,
+    humidity: record?.main.humidity,
+    visibility: record?.visibility,
+    wind: record?.wind.speed,
+    degree: record?.wind.deg,
+    sunrise: record?.sys.sunrise,
+    sunset: record?.sys.sunset,
   };
 
   return (
@@ -106,9 +61,7 @@ const WeatherCard: React.FC<Props> = ({
         <div
           className="cursor-pointer"
           onClick={() => {
-            setIndividualView(true);
-            setIndividualRecordIndex(index);
-            navigate(`/individual_view?citycode=${record.id}`);
+            navigate(`${routes.INDIVIDUAL_VIEW}?color_index=${index}&citycode=${record.id}`);
           }}
         >
           <WeatherCardTop weatherTopRecord={weatherTopRecord} />
