@@ -3,23 +3,19 @@ import WeatherCardBottom from "./WeatherCardBottom";
 import WeatherCardIndividualTop from "./WeatherCardIndividualTop";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import apiManager from "../../api/apiManager";
-import { colors } from "../../constants";
+import { api_constants, colors, localStorageKeys, query_params, routes } from "../../constants";
 
-type Props = {
-  index: number;
-  setIndividualView: (view: boolean) => void;
-};
-
-const WeatherCardIndividual: React.FC<Props> = ({
-  index,
-  setIndividualView,
-}) => {
+const WeatherCardIndividual = () => {
   const navigate = useNavigate();
 
   const [loaded, setLoaded] = useState<boolean>(false);
 
   const [queryParameters] = useSearchParams();
-  const citycode = queryParameters.get("citycode")?.toString() || "";
+
+  const citycode = queryParameters.get(query_params.CITY_CODE)?.toString() || "";
+  const color_index_str = queryParameters.get(query_params.COLOR_INDEX) || "0";
+
+  const color_index = parseInt(color_index_str);
 
   const [weatherTopRecord, setWeatherTopRecord] = React.useState({
     cityName: "",
@@ -46,7 +42,7 @@ const WeatherCardIndividual: React.FC<Props> = ({
 
   const callAPI = () => {
     if (!apiCallMade && citycode !== "") {
-      const apiCall = apiManager.apiGET_WeatherByCityIds([citycode], "metric");
+      const apiCall = apiManager.apiGET_WeatherByCityIds([citycode], api_constants.UNIT_TYPE);
 
       apiCall.then((response) => {
         if (response) {
@@ -72,7 +68,7 @@ const WeatherCardIndividual: React.FC<Props> = ({
 
           // Cache the data in localStorage with a timestamp
           localStorage.setItem(
-            "cachedIndividualCardData",
+            localStorageKeys.CACHED_INDIVIDUAL_CARD_DATA,
             JSON.stringify({
               response,
               timestamp: Date.now(),
@@ -89,7 +85,7 @@ const WeatherCardIndividual: React.FC<Props> = ({
   useEffect(() => {
     // Check if cached data exists and is not expired
     const cachedIndividualCardData = localStorage.getItem(
-      "cachedIndividualCardData"
+      localStorageKeys.CACHED_INDIVIDUAL_CARD_DATA
     );
 
     if (cachedIndividualCardData) {
@@ -141,15 +137,14 @@ const WeatherCardIndividual: React.FC<Props> = ({
 
   return (
     <div
-      className={`relative w-[600px] text-white ${colors[index]} rounded-xl`}
+      className={`relative w-[600px] text-white ${colors[color_index]} rounded-xl`}
     >
       {loaded && (
         <div className="rounded-t-xl w-[600]">
           <div className="flex justify-start p-4">
             <button
               onClick={() => {
-                setIndividualView(false);
-                navigate("/");
+                navigate(routes.HOME);
               }}
             >
               <svg

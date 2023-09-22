@@ -1,34 +1,9 @@
 import React from "react";
+import { WeatherRecordTopType } from "../../propTypes";
+import { formatTimestampToDateTime } from "../../formats";
+import { api_constants } from "../../constants";
 
-type Props = {
-  weatherTopRecord: {
-    cityName: string;
-    country: string;
-    dt: number;
-    icon: string;
-    description: string;
-    temp: number;
-    temp_min: number;
-    temp_max: number;
-  };
-};
-
-function formatTimestamp(timestamp: number): string {
-  const options: Intl.DateTimeFormatOptions = {
-    month: "short", // Abbreviated month name
-    day: "numeric", // Day of the month
-    hour: "numeric", // Hour (12-hour clock)
-    minute: "numeric", // Minutes
-    hour12: true, // Use 12-hour clock
-  };
-
-  const date = new Date(timestamp);
-  const formattedDate = date.toLocaleDateString("en-US", options);
-
-  return formattedDate;
-}
-
-const WeatherCardIndividualTop: React.FC<Props> = ({ weatherTopRecord }) => {
+const WeatherCardIndividualTop: React.FC<WeatherRecordTopType> = ({ weatherTopRecord }) => {
   return (
     <>
       <div className="flex-col">
@@ -37,7 +12,7 @@ const WeatherCardIndividualTop: React.FC<Props> = ({ weatherTopRecord }) => {
             <p className="text-xl font-bold">
               {weatherTopRecord.cityName}, {weatherTopRecord.country}
             </p>
-            <p className="text-sm">{formatTimestamp(weatherTopRecord.dt)}</p>
+            <p className="text-sm">{formatTimestampToDateTime(weatherTopRecord.dt)}</p>
           </div>
         </div>
       </div>
@@ -48,7 +23,7 @@ const WeatherCardIndividualTop: React.FC<Props> = ({ weatherTopRecord }) => {
               {weatherTopRecord && weatherTopRecord.icon && (
                 <img
                   className="w-[50px] h-[50px]"
-                  src={`https://openweathermap.org/img/wn/${weatherTopRecord.icon}@2x.png`}
+                  src={`${api_constants.BASE_URL_ICON}/img/wn/${weatherTopRecord.icon}@2x.png`}
                   alt="icon"
                 />
               )}

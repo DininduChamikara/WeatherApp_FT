@@ -1,32 +1,12 @@
 import React from "react";
 import icon from "../../images/smart_icon.png";
+import { WeatherRecordBottomType } from "../../propTypes";
+import { formatTimestampToTime } from "../../formats";
+import { bgColors } from "../../constants";
 
-type Props = {
-  weatherBottomRecord: {
-    presure: number;
-    humidity: number;
-    visibility: number;
-    wind: number;
-    degree: number;
-    sunrise: number;
-    sunset: number;
-  };
-};
-
-function formatTimestamp(timestamp: number): string {
-  const date = new Date(timestamp);
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const amOrPm = hours >= 12 ? "pm" : "am";
-  const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
-  const formattedMinutes = minutes < 10 ? "0" + minutes : minutes.toString();
-
-  return `${formattedHours}.${formattedMinutes}${amOrPm}`;
-}
-
-const WeatherCardBottom: React.FC<Props> = ({ weatherBottomRecord }) => {
+const WeatherCardBottom: React.FC<WeatherRecordBottomType> = ({ weatherBottomRecord }) => {
   return (
-    <div className="bg-[#383b47] rounded-b-xl p-5">
+    <div className={`bg-[${bgColors.CARD_BOTTOM}] rounded-b-xl p-5`}>
       {/* medium and large screen */}
       <div className="hidden md:grid md:grid-cols-3 md:divide-x">
         <div className="flex sm:my-1 md:my-0 justify-center">
@@ -62,11 +42,11 @@ const WeatherCardBottom: React.FC<Props> = ({ weatherBottomRecord }) => {
           <div className="flex flex-col justify-center items-center">
             <div className="flex gap-1">
               <p className="text-sm font-bold">Sunrise:</p>
-              <p className="text-sm">{formatTimestamp(weatherBottomRecord.sunrise)}</p>
+              <p className="text-sm">{formatTimestampToTime(weatherBottomRecord.sunrise)}</p>
             </div>
             <div className="flex gap-1">
               <p className="text-sm font-bold">Sunset:</p>
-              <p className="text-sm">{formatTimestamp(weatherBottomRecord.sunset)}</p>
+              <p className="text-sm">{formatTimestampToTime(weatherBottomRecord.sunset)}</p>
             </div>
           </div>
         </div>
@@ -107,11 +87,11 @@ const WeatherCardBottom: React.FC<Props> = ({ weatherBottomRecord }) => {
           <div className="flex my-2 flex-col justify-center items-center">
             <div className="flex gap-1">
               <p className="text-sm font-bold">Sunrise:</p>
-              <p className="text-sm">{formatTimestamp(weatherBottomRecord.sunrise)}</p>
+              <p className="text-sm">{formatTimestampToTime(weatherBottomRecord.sunrise)}</p>
             </div>
             <div className="flex gap-1">
               <p className="text-sm font-bold">Sunset:</p>
-              <p className="text-sm">{formatTimestamp(weatherBottomRecord.sunset)}</p>
+              <p className="text-sm">{formatTimestampToTime(weatherBottomRecord.sunset)}</p>
             </div>
           </div>
         </div>
