@@ -5,7 +5,7 @@ const api_constants = {
   BASE_URL: "http://api.openweathermap.org",
   BASE_URL_ICON: "https://openweathermap.org",
   UNIT_TYPE: "metric",
-}
+};
 
 const localStorageKeys = {
   CACHED_WEATHER_DATA: "cachedWeatherData",
@@ -28,15 +28,17 @@ const colors = [
   "bg-blue-500",
 ];
 
-const bgColors = {
-  APP_BACKGROUND: "#1f2128",
-  CARD_BOTTOM: "#383b47",
-  FOOTER_BACKGROUND: "#383b47",
-}
-
 const query_params = {
   CITY_CODE: "citycode",
   COLOR_INDEX: "color_index",
 };
 
-export { colors, appTitle, footerText, api_constants, localStorageKeys, routes, bgColors, query_params };
+export {
+  colors,
+  appTitle,
+  footerText,
+  api_constants,
+  localStorageKeys,
+  routes,
+  query_params,
+};

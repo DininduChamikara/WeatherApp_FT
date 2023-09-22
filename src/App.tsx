@@ -8,7 +8,7 @@ import backgroundImage from "./images/header_bg.png";
 import Home from "./pages/Home";
 import IndividualView from "./pages/IndividualView";
 import SpinerLoader from "./components/SpinerLoader";
-import { api_constants, bgColors, localStorageKeys, routes } from "./constants";
+import { api_constants, localStorageKeys, routes } from "./constants";
 
 function App() {
   const [weatherRecords, setWeatherRecords] = useState<any[]>([]);
@@ -112,7 +112,7 @@ function App() {
         <Footer />
       </div>
       <div
-        className={`fixed bottom-0 left-0 right-0 z-[-1] h-screen bg-[${bgColors.APP_BACKGROUND}]`}
+        className="fixed bottom-0 left-0 right-0 z-[-1] h-screen bg-[#1f2128]"
       />
     </div>
   );

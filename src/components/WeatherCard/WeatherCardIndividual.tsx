@@ -4,6 +4,7 @@ import WeatherCardIndividualTop from "./WeatherCardIndividualTop";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import apiManager from "../../api/apiManager";
 import { api_constants, colors, localStorageKeys, query_params, routes } from "../../constants";
+import SpinerLoader from "../SpinerLoader";
 
 const WeatherCardIndividual = () => {
   const navigate = useNavigate();
@@ -139,7 +140,7 @@ const WeatherCardIndividual = () => {
     <div
       className={`relative w-[600px] text-white ${colors[color_index]} rounded-xl`}
     >
-      {loaded && (
+      {loaded ? (
         <div className="rounded-t-xl w-[600]">
           <div className="flex justify-start p-4">
             <button
@@ -166,6 +167,8 @@ const WeatherCardIndividual = () => {
           <WeatherCardIndividualTop weatherTopRecord={weatherTopRecord} />
           <WeatherCardBottom weatherBottomRecord={weatherBottomRecord} />
         </div>
+      ):(
+        <SpinerLoader />
       )}
     </div>
   );
