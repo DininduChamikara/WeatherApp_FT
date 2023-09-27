@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import WeatherCardBottom from "./WeatherCardBottom";
-import WeatherCardIndividualTop from "./WeatherCardIndividualTop";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import apiManager from "../../api/apiManager";
-import { api_constants, colors, localStorageKeys, query_params, routes } from "../../constants";
+import { api_constants, colors, query_params, routes } from "../../constants";
 import SpinerLoader from "../SpinerLoader";
+import WeatherCardBottom from "./WeatherCardBottom";
+import WeatherCardIndividualTop from "./WeatherCardIndividualTop";
 
 const WeatherCardIndividual = () => {
   const navigate = useNavigate();
@@ -39,10 +39,8 @@ const WeatherCardIndividual = () => {
     sunset: 0,
   });
 
-  let apiCallMade = false;
-
   const callAPI = () => {
-    if (!apiCallMade && citycode !== "") {
+    if (citycode !== "") {
       const apiCall = apiManager.apiGET_WeatherByCityIds([citycode], api_constants.UNIT_TYPE);
 
       apiCall.then((response) => {
@@ -66,74 +64,14 @@ const WeatherCardIndividual = () => {
             sunrise: response.list[0].sys.sunrise,
             sunset: response.list[0].sys.sunset,
           });
-
-          // Cache the data in localStorage with a timestamp
-          localStorage.setItem(
-            localStorageKeys.CACHED_INDIVIDUAL_CARD_DATA,
-            JSON.stringify({
-              response,
-              timestamp: Date.now(),
-              lastRequestedCityCode: citycode,
-            })
-          );
           setLoaded(true);
         }
       });
-      apiCallMade = true;
     }
   };
 
   useEffect(() => {
-    // Check if cached data exists and is not expired
-    const cachedIndividualCardData = localStorage.getItem(
-      localStorageKeys.CACHED_INDIVIDUAL_CARD_DATA
-    );
-
-    if (cachedIndividualCardData) {
-      const parsedCachedIndividualCardData = JSON.parse(
-        cachedIndividualCardData
-      );
-      const cachedIndividualCardDataTimestamp =
-        parsedCachedIndividualCardData.timestamp;
-      const cachedIndividualCardDataResponse =
-        parsedCachedIndividualCardData.response;
-      const cachedLastRequestedCityCode =
-        parsedCachedIndividualCardData.lastRequestedCityCode;
-
-      if (citycode !== cachedLastRequestedCityCode) {
-        callAPI();
-        return;
-      } else {
-        if (Date.now() - cachedIndividualCardDataTimestamp < 5 * 60 * 1000) {
-          setWeatherTopRecord({
-            cityName: cachedIndividualCardDataResponse.list[0].name,
-            country: cachedIndividualCardDataResponse.list[0].sys.country,
-            dt: cachedIndividualCardDataResponse.list[0].dt,
-            icon: cachedIndividualCardDataResponse.list[0].weather[0].icon,
-            description:
-              cachedIndividualCardDataResponse.list[0].weather[0].description,
-            temp: cachedIndividualCardDataResponse.list[0].main.temp,
-            temp_min: cachedIndividualCardDataResponse.list[0].main.temp_min,
-            temp_max: cachedIndividualCardDataResponse.list[0].main.temp_max,
-          });
-          setWeatherBottomRecord({
-            presure: cachedIndividualCardDataResponse.list[0].main.pressure,
-            humidity: cachedIndividualCardDataResponse.list[0].main.humidity,
-            visibility: cachedIndividualCardDataResponse.list[0].visibility,
-            wind: cachedIndividualCardDataResponse.list[0].wind.speed,
-            degree: cachedIndividualCardDataResponse.list[0].wind.deg,
-            sunrise: cachedIndividualCardDataResponse.list[0].sys.sunrise,
-            sunset: cachedIndividualCardDataResponse.list[0].sys.sunset,
-          });
-          setLoaded(true);
-        } else {
-          callAPI();
-        }
-      }
-    } else {
-      // No cached data
-      callAPI();
-    }
+    callAPI();
   }, []);
 
   return (

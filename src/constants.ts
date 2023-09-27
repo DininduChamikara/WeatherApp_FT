@@ -12,6 +12,8 @@ const localStorageKeys = {
   CACHED_INDIVIDUAL_CARD_DATA: "cachedIndividualCardData",
 };
 
+const cachedExpirationTime = 5 * 60 * 1000;
+
 const routes = {
   HOME: "/",
   INDIVIDUAL_VIEW: "/individual_view",
@@ -39,6 +41,7 @@ export {
   footerText,
   api_constants,
   localStorageKeys,
+  cachedExpirationTime,
   routes,
   query_params,
 };

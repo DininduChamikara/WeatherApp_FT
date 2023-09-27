@@ -9,7 +9,7 @@ class ApiService {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      console.error("Error fetching: ", error);
     }
   }
 }

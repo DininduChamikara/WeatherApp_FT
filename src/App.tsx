@@ -8,44 +8,38 @@ import backgroundImage from "./images/header_bg.png";
 import Home from "./pages/Home";
 import IndividualView from "./pages/IndividualView";
 import SpinerLoader from "./components/SpinerLoader";
-import { api_constants, localStorageKeys, routes } from "./constants";
+import { api_constants, cachedExpirationTime, localStorageKeys, routes } from "./constants";
 
 function App() {
   const [weatherRecords, setWeatherRecords] = useState<any[]>([]);
-
   const [loaded, setLoaded] = useState<boolean>(false);
 
-  let apiCallMade = false;
-
   const callAPI = () => {
-    if (!apiCallMade) {
-      const cityCodesArr: any[] = [];
-      cityData.List.forEach((city: any) => {
-        cityCodesArr.push(city.CityCode);
-      });
+    const cityCodesArr: any[] = [];
+    cityData.List.forEach((city: any) => {
+      cityCodesArr.push(city.CityCode);
+    });
 
-      const apiCall = apiManager.apiGET_WeatherByCityIds(
-        cityCodesArr,
-        api_constants.UNIT_TYPE
-      );
+    const apiCall = apiManager.apiGET_WeatherByCityIds(
+      cityCodesArr,
+      api_constants.UNIT_TYPE
+    );
 
-      apiCall.then((response) => {
-        if (response) {
-          setWeatherRecords(response.list);
+    apiCall.then((response) => {
+      if (response) {
+        setWeatherRecords(response.list);
 
-          // Cache the data in localStorage with a timestamp
-          localStorage.setItem(
-            localStorageKeys.CACHED_WEATHER_DATA,
-            JSON.stringify({
-              response,
-              timestamp: Date.now(),
-            })
-          );
-          setLoaded(true);
-        }
-      });
-      apiCallMade = true;
-    }
+        // Cache the data in localStorage with a timestamp
+        localStorage.setItem(
+          localStorageKeys.CACHED_WEATHER_DATA,
+          JSON.stringify({
+            response,
+            timestamp: Date.now(),
+          })
+        );
+        setLoaded(true);
+      }
+    });
   };
 
   useEffect(() => {
@@ -59,18 +53,15 @@ function App() {
       const cachedWeatherDataTimestamp = parsedCachedWeatherData.timestamp;
       const cachedWeatherDataResponse = parsedCachedWeatherData.response;
 
-      if (Date.now() - cachedWeatherDataTimestamp < 5 * 60 * 1000) {
+      if (Date.now() - cachedWeatherDataTimestamp > cachedExpirationTime) {
+        localStorage.clear();
+      }else{
         setWeatherRecords(cachedWeatherDataResponse.list);
         setLoaded(true);
         return;
-      } else {
-        // old cached data
-        callAPI();
       }
-    } else {
-      // No cached data
-      callAPI();
-    }
+    } 
+    callAPI();
   }, []);
 
   function popItemFromArray(index: number) {
@@ -111,9 +102,7 @@ function App() {
       <div className="fixed bottom-0 left-0 right-0">
         <Footer />
       </div>
-      <div
-        className="fixed bottom-0 left-0 right-0 z-[-1] h-screen bg-[#1f2128]"
-      />
+      <div className="fixed bottom-0 left-0 right-0 z-[-1] h-screen bg-[#1f2128]" />
     </div>
   );
 }
