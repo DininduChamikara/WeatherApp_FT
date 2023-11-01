@@ -1,24 +1,31 @@
 import React from "react";
 import WeatherCard from "../components/WeatherCard/WeatherCard";
 import { HomePropsType } from "../propTypes";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Home: React.FC<HomePropsType> = ({
   weatherRecords,
   popItemFromArray,
 }) => {
+  const { isAuthenticated } = useAuth0();
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-8 px-0">
-      {weatherRecords?.map((record: any, index: number) => {
-        return (
-          <WeatherCard
-            key={record.id}
-            record={record}
-            index={index}
-            popItemFromArray={popItemFromArray}
-          />
-        );
-      })}
-    </div>
+    <>
+      {isAuthenticated && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-8 px-0">
+          {weatherRecords?.map((record: any, index: number) => {
+            return (
+              <WeatherCard
+                key={record.id}
+                record={record}
+                index={index}
+                popItemFromArray={popItemFromArray}
+              />
+            );
+          })}
+        </div>
+      )}
+    </>
   );
 };
 
