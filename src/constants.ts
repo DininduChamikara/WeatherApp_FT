@@ -10,6 +10,7 @@ const api_constants = {
 const localStorageKeys = {
   CACHED_WEATHER_DATA: "cachedWeatherData",
   CACHED_INDIVIDUAL_CARD_DATA: "cachedIndividualCardData",
+  CACHED_AUTH0_DATA: "cachedAuth0Data",
 };
 
 const cachedExpirationTime = 5 * 60 * 1000;
