@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import IndividualView from "./pages/IndividualView";
 import SpinerLoader from "./components/SpinerLoader";
 import { api_constants, cachedExpirationTime, localStorageKeys, routes } from "./constants";
+import Login from "./pages/Login";
 
 function App() {
   const [weatherRecords, setWeatherRecords] = useState<any[]>([]);
@@ -80,6 +81,7 @@ function App() {
         {loaded ? (
           <BrowserRouter>
             <Routes>
+              <Route path={routes.LOGIN} element={<Login />} />
               <Route
                 path={routes.HOME}
                 element={

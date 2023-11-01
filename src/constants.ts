@@ -15,7 +15,8 @@ const localStorageKeys = {
 const cachedExpirationTime = 5 * 60 * 1000;
 
 const routes = {
-  HOME: "/",
+  LOGIN: "/",
+  HOME: "/home",
   INDIVIDUAL_VIEW: "/individual_view",
 };
 
