@@ -1,15 +1,21 @@
-import React from 'react'
-import LoginButton from '../components/LoginButton'
-import LogoutButton from '../components/LogoutButton'
+import LoginButton from "../components/LoginButton";
 
 const Login = () => {
   return (
-    <div>
-        <h1>Auth0 Login</h1>
-        <LoginButton />
-        <LogoutButton />
+    <div className="w-full flex justify-center">
+      <div className="text-center">
+        <h1 className="text-white text-4xl text-center text-yellow-200">
+          Welcome Back!
+        </h1>
+        <p className="text-white text-lg text-center">
+          Discover the Weather Condition
+        </p>
+        <div className="pt-10 pb-16">
+          <LoginButton />
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
