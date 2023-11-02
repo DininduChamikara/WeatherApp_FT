@@ -4,9 +4,10 @@ import { localStorageKeys } from "../constants";
 
 const LogoutButton = () => {
   const { logout, isAuthenticated } = useAuth0();
-
   const [isAuthenticatedInCache, setIsAuthenticatedInCache] =
     useState(isAuthenticated);
+
+  console.log(isAuthenticatedInCache);
 
   useEffect(() => {
     const cachedAuth0Data = localStorage.getItem(
@@ -38,7 +39,10 @@ const LogoutButton = () => {
       {isAuthenticatedInCache && (
         <div
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer items-center"
-          onClick={() => logout()}
+          onClick={() => {
+            logout();
+            localStorage.clear();
+          }}
         >
           <svg
             className="w-5 h-5 mr-3"
@@ -54,7 +58,7 @@ const LogoutButton = () => {
               d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
             />
           </svg>
-          Sign Out
+          <span className="hidden md:block">Sign Out</span>
         </div>
       )}
     </div>

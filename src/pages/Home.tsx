@@ -3,14 +3,15 @@ import WeatherCard from "../components/WeatherCard/WeatherCard";
 import { localStorageKeys } from "../constants";
 import { HomePropsType } from "../propTypes";
 import { useAuth0 } from "@auth0/auth0-react";
+import SpinerLoader from "../components/SpinerLoader";
 
 const Home: React.FC<HomePropsType> = ({
   weatherRecords,
   popItemFromArray,
 }) => {
-
   const { isAuthenticated } = useAuth0();
-  const [isAuthenticatedInCache, setIsAuthenticatedInCache] = useState(isAuthenticated);
+  const [isAuthenticatedInCache, setIsAuthenticatedInCache] =
+    useState(isAuthenticated);
 
   useEffect(() => {
     const cachedAuth0Data = localStorage.getItem(
@@ -38,7 +39,7 @@ const Home: React.FC<HomePropsType> = ({
 
   return (
     <>
-      {(isAuthenticated || isAuthenticatedInCache) && (
+      {isAuthenticated || isAuthenticatedInCache ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-8 px-0">
           {weatherRecords?.map((record: any, index: number) => {
             return (
@@ -51,6 +52,8 @@ const Home: React.FC<HomePropsType> = ({
             );
           })}
         </div>
+      ) : (
+        <SpinerLoader />
       )}
     </>
   );
