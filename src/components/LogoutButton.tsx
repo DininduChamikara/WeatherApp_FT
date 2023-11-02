@@ -7,8 +7,6 @@ const LogoutButton = () => {
   const [isAuthenticatedInCache, setIsAuthenticatedInCache] =
     useState(isAuthenticated);
 
-  console.log(isAuthenticatedInCache);
-
   useEffect(() => {
     const cachedAuth0Data = localStorage.getItem(
       localStorageKeys.CACHED_AUTH0_DATA
