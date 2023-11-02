@@ -1,4 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import { redirectURLs } from "../constants";
 
 const LoginButton = () => {
   const { loginWithRedirect, isAuthenticated } = useAuth0();
@@ -11,7 +12,7 @@ const LoginButton = () => {
           onClick={() =>
             loginWithRedirect({
               authorizationParams: {
-                redirect_uri: "http://localhost:3000/home",
+                redirect_uri: redirectURLs.LOGIN_REDIRECT,
               },
             })
           }

@@ -21,6 +21,10 @@ const routes = {
   INDIVIDUAL_VIEW: "/individual_view",
 };
 
+const redirectURLs = {
+  LOGIN_REDIRECT: "http://localhost:3000/home"
+}
+
 const colors = [
   "bg-orange-500",
   "bg-sky-500",
@@ -46,4 +50,5 @@ export {
   cachedExpirationTime,
   routes,
   query_params,
+  redirectURLs
 };
